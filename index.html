@@ -1,9 +1,169 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="UTF-8">
 	<title>Calculator</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="A HTML5 Calculator to use as PWA">
+	<meta name="author" content="Justus Dietrich">
+	<meta name="keywords" content="Justus Dietrich, Calculator, Taschenrechner, Progressive Web App, PWA">
+	<meta name="robots" content="index, follow">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha512-Dop/vW3iOtayerlYAqCgkVr2aTr2ErwwTYOvRFUpzl2VhCMJyjQF0Q9TjUXIo6JhuM/3i0vVEt2e/7QQmnHQqw==" crossorigin="anonymous">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js" integrity="sha512-jGsMH83oKe9asCpkOVkBnUrDDTp8wl+adkB2D+//JtlxO4SrLoJdhbOysIFQJloQFD+C4Fl1rMsQZF76JjV0eQ==" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha512-oBTprMeNEKCnqfuqKd6sbvFzmFQtlXS3e0C/RGFV0hD6QzhHV+ODfaQbAlmY6/q0ubbwlAM/nCJjkrgA3waLzg==" crossorigin="anonymous"></script>
+	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.0.0/math.js" integrity="sha512-AgG5/Jq2FPT3JPEiEKR4sITq6Xq3unqCO9GvTtfWraQ7+mL4zsOZJch5prtdwX0l3amDxjKkD+uY3dVSJz+SDA==" crossorigin="anonymous"></script>-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.0.0/math.min.js" integrity="sha512-CFnGTpuB0vKRPmsHbENvx+t70bKphn4Kco5XOiIZIcbwGQcUSt6jPgQV+rzlmYwMTDFI8wkL38ign61GQwEnBQ==" crossorigin="anonymous"></script>
+	<style type="text/css">
+		body {
+			background-color: #252525;
+			height: 100vh;
+			width: 100vw;
+		}
+		.btn-black {
+			color: #f5f5f5;
+			background-color: #101010;
+			border-color: #1d1d1d;
+			font-size: 32px;
+		}
+		.btn:focus,
+		.btn:active:focus,
+		.btn.active:focus,
+		.btn.focus,
+		.btn:active.focus,
+		.btn.active.focus {
+			outline: 1px auto #ffffff;
+			outline-offset: 0px;
+		}
+		.btn:hover,
+		.btn:focus,
+		.btn.focus {
+			color: #f5f5f5;
+			text-decoration: none;
+		}
+		#calc-root {
+			height: 70%;
+		}
+		#calc-buttons {
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+		}
+		#calc-buttons > div {
+			flex: 1;
+		}
+		.calc-buttons-row {
+			display: flex;
+			width: 100%;
+			height: 100%;
+		}
+		.calc-buttons-row > button {
+			flex: 1;
+		}
+		.but {
+			display: inline-block;
+			margin: 1px;
+			/*margin-bottom: 0;*/
+			font-weight: 400;
+			text-align: center;
+			white-space: nowrap;
+			vertical-align: middle;
+			-ms-touch-action: manipulation;
+			touch-action: manipulation;
+			cursor: pointer;
+			background-image: none;
+			border: 1px solid transparent;
+			padding: 6px 12px;
+			font-size: 14px;
+			line-height: 1.42857143;
+			border-radius: 0px;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			font-size: 36px;
+			outline: none;
+		}
+		.but:active {
+			border-color: white;
+			outline: none;
+		}
+		#calc-input {
+			width: calc(100% - 2px);
+			height: calc(100% - 2px);
+			background-color: #131313;
+			border: 1px solid transparent;
+			margin: 1px;
+			text-align: right;
+			color: white;
+			font-size: 48px;
+			font-family: monospace;
+			padding-right: 16px;
+		}
+	</style>
 </head>
 <body>
-
+<div class="container" role="main" style="height: 100%">
+	<h1 style="color: white; margin-bottom: 16px;">Calculator</h1>
+	<div id="calc-root">
+		<div id="calc-buttons">
+			<div id="calc-display" style="padding: 0; margin: 0;">
+				<input type="text" name="1 + 1" id="calc-input">
+			</div>
+			<div class="calc-buttons-row">
+				<button type="button" class="but btn-black" onclick="but('(')">(</button>
+				<button type="button" class="but btn-black" onclick="but(')')">)</button>
+				<button type="button" class="but btn-black" onclick="clear_in();">C</button>
+				<button type="button" class="but btn-black" onclick="but('/')">/</button>
+			</div>
+			<div class="calc-buttons-row">
+				<button type="button" class="but btn-black" onclick="but('7')">7</button>
+				<button type="button" class="but btn-black" onclick="but('8')">8</button>
+				<button type="button" class="but btn-black" onclick="but('9')">9</button>
+				<button type="button" class="but btn-black" onclick="but('*')">*</button>
+			</div>
+			<div class="calc-buttons-row">
+				<button type="button" class="but btn-black" onclick="but('4')">4</button>
+				<button type="button" class="but btn-black" onclick="but('5')">5</button>
+				<button type="button" class="but btn-black" onclick="but('6')">6</button>
+				<button type="button" class="but btn-black" onclick="but('-')">-</button>
+			</div>
+			<div class="calc-buttons-row">
+				<button type="button" class="but btn-black" onclick="but('1')">1</button>
+				<button type="button" class="but btn-black" onclick="but('2')">2</button>
+				<button type="button" class="but btn-black" onclick="but('3')">3</button>
+				<button type="button" class="but btn-black" onclick="but('+')">+</button>
+			</div>
+			<div class="calc-buttons-row">
+				<button type="button" class="but btn-black" onclick="back()">←</button>
+				<button type="button" class="but btn-black" onclick="but('0')">0</button>
+				<button type="button" class="but btn-black" onclick="but('.')">.</button>
+				<button type="button" class="but btn-primary" style="font-size: 36px;" onclick="solve()">=</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	function but(button) {
+		$("#calc-input").val(
+			$("#calc-input").val() + button
+		);
+	}
+	function solve() {
+		$("#calc-input").val(
+			math.evaluate(
+				$("#calc-input").val()
+			)
+		);
+	}
+	function clear_in() {
+		$("#calc-input").val("");
+	}
+	function back() {
+		$("#calc-input").val(
+			$("#calc-input").val().slice(0, -1)
+		);
+	}
+</script>
 </body>
 </html>
