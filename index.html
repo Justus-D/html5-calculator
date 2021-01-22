@@ -40,6 +40,19 @@
 	<script src="/vendor/libs/mathjs/9.0.0/math.js" integrity="sha512-AgG5/Jq2FPT3JPEiEKR4sITq6Xq3unqCO9GvTtfWraQ7+mL4zsOZJch5prtdwX0l3amDxjKkD+uY3dVSJz+SDA==" crossorigin="anonymous"></script>
 	<!--<script src="/vendor/libs/mathjs/9.0.0/math.min.js" integrity="sha512-CFnGTpuB0vKRPmsHbENvx+t70bKphn4Kco5XOiIZIcbwGQcUSt6jPgQV+rzlmYwMTDFI8wkL38ign61GQwEnBQ==" crossorigin="anonymous"></script>-->
 
+	<script type="text/javascript">
+		if ('serviceWorker' in navigator) {
+			window.addEventListener('load', function() {
+				navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+					// Registration was successful
+					console.log('ServiceWorker registration successful with scope: ', registration.scope);
+				}, function(err) {
+					// registration failed :(
+					console.log('ServiceWorker registration failed: ', err);
+				});
+			});
+		}
+	</script>
 	<style type="text/css">
 		body {
 			background-color: #252525;
