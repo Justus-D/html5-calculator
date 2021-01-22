@@ -228,6 +228,7 @@
 	<div id="size-measure-new"></div>
 </div>
 <script type="text/javascript">
+'use strict';
 function but(button) {
 	$("#calc-input").val(
 		$("#calc-input").val() + button
@@ -265,7 +266,7 @@ document.getElementById('calc-input').addEventListener("keydown", function(event
 });
 
 function rescaleFont(target, offset = 0, prop = "value") {
-	measure = document.getElementById("size-measure");
+	var measure = document.getElementById("size-measure");
 	measure.style.fontFamily = window.getComputedStyle(target).fontFamily;
 	measure.style.fontSize = window.getComputedStyle(target).fontSize;
 	if (prop == "value") {
