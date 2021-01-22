@@ -1,4 +1,4 @@
-var CACHE_NAME = 'calculator-cache-v3';
+var CACHE_NAME = 'calculator-cache-v4';
 var urlsToCache = [
 	'/',
 	'/manifest.json',
