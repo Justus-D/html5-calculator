@@ -1,7 +1,7 @@
 {
 	"short_name": "Calc",
 	"name": "Calculator",
-	"description": "A HTML5 Calculator to use as PWA",
+	"description": "An HTML5 Calculator to use as a PWA",
 	"icons": [
 		{
 			"src": "/icons/v1-x192.png",
