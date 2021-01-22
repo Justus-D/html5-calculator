@@ -140,7 +140,7 @@
 			margin: 1px;
 			text-align: right;
 			color: white;
-			font-size: 48px;
+			font-size: 36px;
 			font-family: monospace;
 			padding-right: 16px;
 			padding-left: 16px;
@@ -279,8 +279,8 @@ function rescaleFont(target, offset = 0, prop = "value") {
 }
 
 function resize_in() {
-	document.getElementById("calc-input").style.fontSize = "48px";
-	rescaleFont(document.getElementById("calc-input"), -32, "value", 48);
+	document.getElementById("calc-input").style.fontSize = "36px";
+	rescaleFont(document.getElementById("calc-input"), -32, "value", 36);
 }
 
 document.getElementById('calc-input').addEventListener("input", function() {
