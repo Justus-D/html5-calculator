@@ -81,7 +81,7 @@
 			text-decoration: none;
 		}
 		#calc-root {
-			height: 70%;
+			height: 80%;
 		}
 		#calc-buttons {
 			height: 100%;
@@ -93,8 +93,8 @@
 		}
 		.calc-buttons-row {
 			display: flex;
-			width: 100%;
-			height: 100%;
+			/*width: 100%;
+			height: 100%;*/
 		}
 		.calc-buttons-row > button {
 			flex: 1;
@@ -127,9 +127,14 @@
 			border-color: white;
 			outline: none;
 		}
+		#calc-display {
+			height: 110px;
+			flex: unset !important;
+		}
 		#calc-input {
 			width: calc(100% - 2px);
-			height: calc(100% - 2px);
+			/*height: calc(100% - 2px);*/
+			height: 60px;
 			background-color: #131313;
 			border: 1px solid transparent;
 			margin: 1px;
@@ -138,17 +143,36 @@
 			font-size: 48px;
 			font-family: monospace;
 			padding-right: 16px;
+			padding-left: 16px;
 			outline: none;
+		}
+		#calc-result {
+			width: calc(100% - 2px);
+			height: calc(48px - 2px);
+			background-color: #131313;
+			border: 1px solid transparent;
+			margin: 1px;
+			text-align: right;
+			color: #707070;
+			font-size: 30px;
+			font-family: monospace;
+			padding-right: 16px;
+			padding-left: 16px;
+			outline: none;
+			vertical-align: middle;
+			overflow: auto;
 		}
 	</style>
 </head>
 <body>
 <div class="container" role="main" style="height: 100%">
+<!--<div style="padding: 16px">-->
 	<h1 style="color: white; margin-bottom: 16px;">Calculator</h1>
 	<div id="calc-root">
 		<div id="calc-buttons">
 			<div id="calc-display" style="padding: 0; margin: 0;">
 				<input type="text" name="1 + 1" id="calc-input">
+				<div id="calc-result"></div>
 			</div>
 			<div class="calc-buttons-row">
 				<button type="button" class="but btn-black" onclick="but('(')">(</button>
@@ -183,33 +207,102 @@
 		</div>
 	</div>
 </div>
+<!--</div>-->
+<div>
+	<div style="
+		visibility: hidden;
+		position: absolute;
+		top: 0;
+		left: 0;
+		border: 1px solid red;
+		/*font-size: 48px;
+		font-family: monospace;*/
+	" id="size-measure"></div>
+	<div id="size-measure-new"></div>
+</div>
 <script type="text/javascript">
-	function but(button) {
-		$("#calc-input").val(
-			$("#calc-input").val() + button
-		);
+function but(button) {
+	$("#calc-input").val(
+		$("#calc-input").val() + button
+	);
+	result();
+	resize_in();
+}
+function solve() {
+	$("#calc-input").val(
+		math.evaluate(
+			$("#calc-input").val()
+		)
+	);
+	result();
+	resize_in();
+}
+function clear_in() {
+	$("#calc-input").val("");
+	$("#calc-result").html("");
+	//result();
+	resize_in();
+}
+function back() {
+	$("#calc-input").val(
+		$("#calc-input").val().slice(0, -1)
+	);
+	result();
+	resize_in();
+}
+document.getElementById('calc-input').addEventListener("keydown", function(event) {
+	if (event.keyCode === 13) {
+		event.preventDefault();
+		solve();
 	}
-	function solve() {
-		$("#calc-input").val(
-			math.evaluate(
-				$("#calc-input").val()
-			)
-		);
+});
+
+function rescaleFont(target, offset = 0, prop = "value") {
+	measure = document.getElementById("size-measure");
+	measure.style.fontFamily = window.getComputedStyle(target).fontFamily;
+	measure.style.fontSize = window.getComputedStyle(target).fontSize;
+	if (prop == "value") {
+		measure.innerHTML = target.value;
 	}
-	function clear_in() {
-		$("#calc-input").val("");
+	else {
+		measure.innerHTML = target.innerHTML;
 	}
-	function back() {
-		$("#calc-input").val(
-			$("#calc-input").val().slice(0, -1)
-		);
+	if (measure.clientWidth <= (target.clientWidth + offset)) {
+		return;
 	}
-	document.getElementById('calc-input').addEventListener("keydown", function(event) {
-		if (event.keyCode === 13) {
-			event.preventDefault();
-			solve();
+	if (measure.clientWidth > (target.clientWidth + offset)) {
+		for (var i = parseInt(measure.style.fontSize); measure.clientWidth > (target.clientWidth + offset); i--) {
+			measure.style.fontSize = i+"px";
 		}
-	});
+		target.style.fontSize = measure.style.fontSize;
+	}
+}
+
+function resize_in() {
+	document.getElementById("calc-input").style.fontSize = "48px";
+	rescaleFont(document.getElementById("calc-input"), -32, "value", 48);
+}
+
+document.getElementById('calc-input').addEventListener("input", function() {
+	result();
+	resize_in();
+});
+
+function result() {
+	var result;
+	try {
+		result = math.evaluate(
+			$("#calc-input").val()
+		);
+	}
+	catch(e) {
+		result = "";
+	}
+	if (result == $("#calc-input").val()) {
+		result = "";
+	}
+	$("#calc-result").html(result);
+}
 </script>
 </body>
 </html>
