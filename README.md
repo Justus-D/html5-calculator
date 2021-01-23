@@ -3,4 +3,4 @@
 
 Essentially a GUI for math.js
 
-Go to https://calculator.justus-d.de and click install in your browser.
+Go to https://calculator.justus-d.de and click "install" in your browser.
