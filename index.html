@@ -179,7 +179,7 @@
 				<button type="button" class="but btn-black" onclick="but('(')">(</button>
 				<button type="button" class="but btn-black" onclick="but(')')">)</button>
 				<button type="button" class="but btn-black" onclick="clear_in()">C</button>
-				<button type="button" class="but btn-black" onclick="back()">←</button>
+				<button type="button" class="but btn-black" onclick="but('back')">←</button>
 			</div>
 			<div class="calc-buttons-row">
 				<button type="button" class="but btn-black" onclick="but('pi')">π</button>
@@ -206,7 +206,7 @@
 				<button type="button" class="but btn-black" onclick="but('+')">+</button>
 			</div>
 			<div class="calc-buttons-row">
-				<button type="button" class="but btn-black" onclick=""></button>
+				<button type="button" class="but btn-black" onclick="focusInput()"></button>
 				<button type="button" class="but btn-black" onclick="but('0')">0</button>
 				<button type="button" class="but btn-black" onclick="but('.')">.</button>
 				<button type="button" class="but btn-primary" style="font-size: 36px;" onclick="solve()">=</button>
@@ -229,12 +229,58 @@
 </div>
 <script type="text/javascript">
 'use strict';
+var cin = document.getElementById("calc-input");
+var cinPos = cin.value.length;
+
+$("#calc-input").on("keyup", function () {
+	cinPos = cin.selectionEnd;
+});
+$("#calc-input").on("mouseup", function () {
+	cinPos = cin.selectionEnd;
+});
+
 function but(button) {
-	$("#calc-input").val(
-		$("#calc-input").val() + button
-	);
-	result();
-	resize_in();
+	var sStart;
+	var sEnd;
+	if (cin.selectionEnd == cin.selectionStart) { // Wenn die gleich sind, dann vorher gesetzten cursor nehmen
+		sStart = cinPos;
+		sEnd = cinPos;
+	}
+	else { // Sonst ist eine
+		sStart = cin.selectionStart;
+		sEnd = cin.selectionEnd;
+	}
+	if (button == 'back' && (cin.selectionEnd == cin.selectionStart)) {
+		if (cin.value.length == 0 || cinPos <= 0) {} else {
+			$("#calc-input").val(
+				cin.value.slice(0, sStart-1) + cin.value.slice(sEnd, cin.value.length)
+			);
+			if (cinPos > 0) {
+				cinPos = sStart - 1;
+			}
+			else {
+				cinPos = 0;
+			}
+		}
+	}
+	else if (button == 'back' && (cin.selectionEnd != cin.selectionStart)) {
+		$("#calc-input").val(
+			cin.value.slice(0, sStart) + cin.value.slice(sEnd, cin.value.length)
+		);
+		cinPos = sStart;
+	}
+	else {
+		$("#calc-input").val(
+			cin.value.slice(0, sStart) + button + cin.value.slice(sEnd, cin.value.length)
+		);
+		cinPos = sStart + button.length;
+	}
+	result(); // Vorschau erzeugen
+	resize_in(); // Input Schriftgröße anpassen
+	console.log({sStart,sEnd,cinPos});
+}
+function focusInput() {
+	cin.focus();
 }
 function solve() {
 	$("#calc-input").val(
@@ -242,18 +288,20 @@ function solve() {
 			$("#calc-input").val()
 		)
 	);
+	cinPos = cin.value.length;
 	result();
 	resize_in();
 }
 function clear_in() {
 	$("#calc-input").val("");
 	$("#calc-result").html("");
+	cinPos = 0;
 	//result();
 	resize_in();
 }
 function back() {
 	$("#calc-input").val(
-		$("#calc-input").val().slice(0, -1)
+		cin.value.slice(0, sStart) + button + cin.value.slice(sEnd, cin.value.length)
 	);
 	result();
 	resize_in();
