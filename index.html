@@ -82,6 +82,7 @@
 		}
 		#calc-root {
 			height: 80%;
+			margin-top: 10px;
 		}
 		#calc-buttons {
 			height: 100%;
@@ -100,6 +101,8 @@
 			flex: 1;
 		}
 		.but {
+			font-size: 14px;
+			font-size: 4vh;
 			display: inline-block;
 			margin: 1px;
 			/*margin-bottom: 0;*/
@@ -113,14 +116,13 @@
 			background-image: none;
 			border: 1px solid transparent;
 			padding: 6px 12px;
-			font-size: 14px;
 			line-height: 1.42857143;
 			border-radius: 0px;
 			-webkit-user-select: none;
 			-moz-user-select: none;
 			-ms-user-select: none;
 			user-select: none;
-			font-size: 36px;
+			/*font-size: 36px;*/
 			outline: none;
 		}
 		.but:active {
@@ -168,7 +170,7 @@
 <body>
 <div class="container" role="main" style="height: 100%">
 <!--<div style="padding: 16px">-->
-	<h1 style="color: white; margin-bottom: 16px;">Calculator</h1>
+	<h1 style="color: white; margin-bottom: 16px;" onclick="this.hidden = true">Calculator</h1>
 	<div id="calc-root">
 		<div id="calc-buttons">
 			<div id="calc-display" style="padding: 0; margin: 0;">
@@ -179,7 +181,7 @@
 				<button type="button" class="but btn-black" onclick="but('(')">(</button>
 				<button type="button" class="but btn-black" onclick="but(')')">)</button>
 				<button type="button" class="but btn-black" onclick="clear_in()">C</button>
-				<button type="button" class="but btn-black" onclick="but('back')">&#129152;</button><!-- ← -->
+				<button type="button" class="but btn-black" onclick="but('back')">←</button><!-- &#129152; -->
 			</div>
 			<div class="calc-buttons-row">
 				<button type="button" class="but btn-black" onclick="but('pi')">π</button>
@@ -209,13 +211,13 @@
 				<button type="button" class="but btn-black" onclick="focusInput()"></button>
 				<button type="button" class="but btn-black" onclick="but('0')">0</button>
 				<button type="button" class="but btn-black" onclick="but('.')">.</button>
-				<button type="button" class="but btn-primary" style="font-size: 36px;" onclick="solve()">=</button>
+				<button type="button" class="but btn-primary" onclick="solve()">=</button>
 			</div>
 		</div>
 	</div>
 </div>
 <!--</div>-->
-<div>
+<div style="visibility: hidden;">
 	<div style="
 		visibility: hidden;
 		position: absolute;
@@ -314,7 +316,7 @@ document.getElementById('calc-input').addEventListener("keydown", function(event
 	}
 });
 
-function rescaleFont(target, offset = 0, prop = "value") {
+function rescaleFont(target, offset = 0, prop = "value", startSize) {
 	var measure = document.getElementById("size-measure");
 	measure.style.fontFamily = window.getComputedStyle(target).fontFamily;
 	measure.style.fontSize = window.getComputedStyle(target).fontSize;
@@ -328,7 +330,7 @@ function rescaleFont(target, offset = 0, prop = "value") {
 		return;
 	}
 	if (measure.clientWidth > (target.clientWidth + offset)) {
-		for (var i = parseInt(measure.style.fontSize); measure.clientWidth > (target.clientWidth + offset); i--) {
+		for (var i = startSize; measure.clientWidth > (target.clientWidth + offset); i--) { // var i = parseInt(measure.style.fontSize)
 			measure.style.fontSize = i+"px";
 		}
 		target.style.fontSize = measure.style.fontSize;
@@ -338,6 +340,10 @@ function rescaleFont(target, offset = 0, prop = "value") {
 function resize_in() {
 	document.getElementById("calc-input").style.fontSize = "36px";
 	rescaleFont(document.getElementById("calc-input"), -32, "value", 36);
+}
+function resizeResult() {
+	document.getElementById("calc-result").style.fontSize = "30px";
+	rescaleFont(document.getElementById("calc-result"), -32, "innerHTML", 30);
 }
 
 document.getElementById('calc-input').addEventListener("input", function() {
@@ -359,6 +365,7 @@ function result() {
 		result = "";
 	}
 	$("#calc-result").html(result);
+	resizeResult();
 }
 </script>
 </body>
